@@ -1,0 +1,16 @@
+{% block body %}
+  <meta charset="utf-8">
+  {% csrf_token %}
+    <form action="" method="GET">
+        <label>名前:<input type="text" size="20" name="word"></label>
+        <input type="submit" value="入力">
+    </form>
+    {% if input %}
+        単語：{{ input }}
+        意味：{{ explanation }}
+    {% endif %}
+
+    {% if error %}
+        {{ error }}
+    {% endif %}
+{% endblock %}

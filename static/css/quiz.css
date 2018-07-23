@@ -1,0 +1,70 @@
+html {
+    background-color: rgb(240,240,240);
+}
+
+body {
+    margin: 0 150 0 150;
+    background-color: white;
+}
+
+h1 {
+    margin: 0 0 15 0;
+    padding: 20 20 20 20;
+    color: lightseagreen;
+    font-family: 'Lobster';
+    font-size: 48px;
+}
+
+a {
+    color: black;
+    text-decoration:underline;
+}
+
+#answer {
+    width: 800px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    animation: anime1 2s ease-in 0s 1 normal;
+    font-size: 64px;
+}
+
+@keyframes anime1 {
+    100% {background-color: white;}
+    90% {background-color: black;}
+    0% {background-color: black;}
+}
+
+@-moz-keyframes anime1 {
+    100% {background-color: white;}
+    90% {background-color: black;}
+    0% {background-color: black;}
+}
+
+@-webkit-keyframes anime1 {
+    100% {background-color: white;}
+    90% {background-color: black;}
+    0% {background-color: black;}
+}
+
+@-o-keyframes anime1 {
+    100% {background-color: white;}
+    90% {background-color: black;}
+    0% {background-color: black;}
+}
+
+@-ms-keyframes anime1 {
+    100% {background-color: white;}
+    90% {background-color: black;}
+    0% {background-color: black;}
+}
+
+#description {
+    border: inset 5px #ff0000;
+    margin: 100 20 0 20;
+    width: 70%;
+    font-size: 48px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20 20 20 20;
+}

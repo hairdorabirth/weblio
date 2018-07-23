@@ -1,0 +1,17 @@
+{% load staticfiles %}
+<html>
+
+<head>
+  <title>Quiz from Wikipedia</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="{% static 'css/quiz.css' %}" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h1>Quiz from Wikipedia</h1>
+  <div id="answer"><a href="https://ejje.weblio.jp/content/{{answer}}" target="_blank">{{answer}}</a></div>
+  <div id="description">{{descr}}</div>
+</body>
+
+</html>
