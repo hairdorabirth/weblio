@@ -7,17 +7,32 @@
     </form>
 
     {% if input %}
+    <script>
+    window.onload = function() {
+        window.setInterval(function() {
+          var dd = new Date();
+          document.getElementById("T1").innerHTML = dd.toLocaleString();
+        }, 1000);
+      }
+    </script>
+    <div id="T1"></div>
         単語：{{ input }}
+        <br>
         意味：{{ explanation }}
-        <script>
-        window.onload = function() {
-            window.setInterval(function() {
-              var dd = new Date();
-              document.getElementById("T1").innerHTML = dd.toLocaleString();
-            }, 1000);
-          }
-        </script>
-        <div id="T1"></div>
+        <br>
+        <p>
+          {{ input }}の発音を再生する：
+          <audio src="{{audio}}" controls style="vertical-align: middle;" autoplay loop>
+            {{ input }}を再生できないようです。
+          </audio>
+        </p>
+
+    {% endif %}
+    {% if his %}
+      {% for pref in his %}
+        {{ pref }}
+        <br>
+      {% endfor %}
     {% endif %}
 
     {% if error %}
