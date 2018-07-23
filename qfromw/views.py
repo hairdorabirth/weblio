@@ -13,6 +13,7 @@ def input_word(request):
         'input': request.GET.get('word'),
     }
 
+    #入力した文字
     tango = str(d.get('input'))
     print(tango)
     res = requests.get('https://ejje.weblio.jp/content/'+tango)
