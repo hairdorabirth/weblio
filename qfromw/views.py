@@ -5,43 +5,76 @@ import requests   # Web からデータを取ってくる時に使う
 import bs4        # スクレイピング
 import re         # 正規表現によるマッチングを使う
 from qfromw.forms import inputForm
+import copy
 
 his = []
 
-
 def input_word(request):
 
-    #辞書をつくる
+    #辞書をつくる#
     d = {
-        'his': his,
         'input': request.GET.get('word'),
     }
-    #word_his()
-
-    #入力した文字　
+    #フォームから入力した単語を変数に保存#
     tango = str(d.get('input'))
-    #print(tango)
-    res = requests.get('https://ejje.weblio.jp/content/'+tango)
-    soup = bs4.BeautifulSoup(res.text, "html5lib")
 
-    onsei = soup.select('i.fa.fa-volume-up.contentTopAudioIcon source')
-    #print('音声', onsei)
-
-
+    #入力された単語が無ければ例外処理を行う#
     try:
+
+        #Weblio上で入力された単語のページへ飛ぶ#
+        res = requests.get('https://ejje.weblio.jp/content/'+tango)
+
+        #bs4でHTMLをスクレイピング#
+        soup = bs4.BeautifulSoup(res.text, "html5lib")
+
+        #その単語の音声データの部分を抽出#
+        onsei = soup.select('i.fa.fa-volume-up.contentTopAudioIcon source')
+
+        #その単語の意味を抽出・保存#
         imi = soup.select('div.summaryM.descriptionWrp td.content-explanation')[0].getText()
         d['explanation'] = imi
+
+        #音声データが登録されていない単語も存在するので、別にtry-exceptを行う#
         try:
             mp3 = re.findall('https://.*mp3' , str(onsei))
             #print('mp3', mp3)
             d['audio'] = mp3[0]
         except:
-            pass
+            d['nomp3'] = 'この単語には音声データが存在しません'
+
+
+        try:
+            #フォームから入力された単語を変数に保存#
+            word =d.get('input')
+            #inputがNoneの時にexcept処理をするためのダミー#
+            len(word)
+
+            #履歴の単語名を保存#
+            his.append(word)
+            #順序を記憶したまま重複を削除#
+            sender = sorted(set(his),key=his.index)
+
+            #重複した単語をリスト末尾に移動#
+            for i in range(len(sender)):
+                if sender[i] == word:
+                    dedupe = sender[:]
+                    dedupe.append(dedupe[i])
+                    dedupe.pop(i)
+                    print('sender',dedupe)
+                    sender = dedupe[:]
+            tmp = sender[:]
+            #最新検索ワードが上に表示されるようにソートしなおす#
+            tmp.reverse()
+            d['his'] = tmp
+
+        except:
+            #何も入力が無い時、input==Noneなので、リストに追加されるのを防ぐための例外処理#
+            print('何も入力が無いのでスルー')
+
     except:
         e = {
             'error': "その単語は存在しません"
         }
         return render(request, 'input.html',e)
-    his.append(d.get('input'))
-    #print('履歴',his)
+
     return render(request, 'input.html',d)

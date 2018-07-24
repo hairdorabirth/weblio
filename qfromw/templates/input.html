@@ -20,18 +20,30 @@
         <br>
         意味：{{ explanation }}
         <br>
+
+        {% if audio %}
         <p>
           {{ input }}の発音を再生する：
           <audio src="{{audio}}" controls style="vertical-align: middle;" autoplay loop>
             {{ input }}を再生できないようです。
           </audio>
         </p>
+        {% endif %}
+
+        {% if nomp3 %}
+        {{nomp3}}<br>
+        {% endif %}
 
     {% endif %}
+
+<hr size="2">
+[検索履歴]<br>
     {% if his %}
+
       {% for pref in his %}
+        <a href="http://127.0.0.1:8000/qfromw/?word={{pref}}">
         {{ pref }}
-        <br>
+        </a><br>
       {% endfor %}
     {% endif %}
 
