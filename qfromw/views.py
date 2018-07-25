@@ -5,7 +5,6 @@ import requests   # Web からデータを取ってくる時に使う
 import bs4        # スクレイピング
 import re         # 正規表現によるマッチングを使う
 
-
 his = []
 
 def input_word(request):
