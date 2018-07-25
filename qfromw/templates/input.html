@@ -1,91 +1,145 @@
-{% block body %}
-  <meta charset="utf-8">
-  今何時<br>
-  <script>
-  window.onload = function() {
-      window.setInterval(function() {
-        var dd = new Date();
-        document.getElementById("T1").innerHTML = dd.toLocaleString();
-      }, 1000);
-    }
-  </script>
-  <div id="T1"></div>
+{% load staticfiles %}
+<html>
 
-<hr size="2">
+  {% block header %}
+    <head>
+      <meta charset="utf-8">
+      <title>Googlio</title>
+      <link rel="stylesheet" type="text/css" href="{% static 'css/input.css' %}">
+    </head>
+  {% endblock header %}
 
-  {% csrf_token %}
-    <form action="" method="GET">
-        <label>検索したい単語を入力:<input type="text" size="20" name="word"></label>
-        <input type="submit" value="入力">
-    </form>
+  <body>
 
-    {% if input %}
-        [単語]<br>
-        <a href="https://ejje.weblio.jp/content/{{ input }}" target="_blank">
-          {{ input }}</a>
-        <br>
-        [{{ mainXX }}]<br>
-        {% for pref in explanation %}
-          {{ pref }}{% if not forloop.last %}<br>{% endif %}
-        {% endfor %}
-        <br>
+    {% block title %}
 
-        {% if audio %}
-        <p>
-          {{ input }}の発音を再生する：
-          <audio src="{{audio}}" controls style="vertical-align: middle;" autoplay>
-            {{ input }}を再生できないようです。
-          </audio>
-        </p>
-        {% endif %}
+      <div class="time">
+        <script>
+        window.onload = function() {
+            window.setInterval(function() {
+              var dd = new Date();
+              document.getElementById("T1").innerHTML = dd.toLocaleString();
+            }, 1000);
+          }
+        </script>
+        <div id="T1"></div>
+      </div>
 
-        {% if nomp3 %}
-          <strong>{{nomp3}}<br></strong>
-        {% endif %}
+      <div class="title">
+        <h1>Googlio</h1>
+      </div>
 
-    {% endif %}
+        {% csrf_token %}
+        <div class="form">
+          <form action="" method="GET">
+              <label><input id="input" type="text" size="20" name="word" placeholder="検索"></label>
+              <!<input id="submit" type="submit" value="検索">
+          </form>
+        </div>
 
-    {% if error %}
-        {{ error }}
-    {% endif %}
+      {% endblock title %}
+
+      {% block result %}
+
+        <div class="result">
+          {% if input %}
+          <div class="tango">
+              [単語]:
+              <a href="https://ejje.weblio.jp/content/{{ input }}" target="_blank">
+                {{ input }}</a>
+          </div>
+
+          <div class="imi">
+              <br>
+            <div id="omonaimi">
+              [{{ mainXX }}]<br>
+            </div>
+              {% for pref in explanation %}
+                {{ pref }}{% if not forloop.last %}<br>{% endif %}
+              {% endfor %}
+          </div>
+              <br>
+
+              {% if audio %}
+              <p>
+                <img src="{% static "images/play.png"%}" style="max-height:30px"/>
+                <strong>{{ input }}の発音を再生する：</strong>
+                <audio src="{{audio}}" controls style="vertical-align: middle;" autoplay>
+                  {{ input }}を再生できないようです。
+                </audio>
+              </p>
+              {% endif %}
+
+              {% if nomp3 %}
+                <strong>{{nomp3}}<br></strong>
+              {% endif %}
+
+          {% endif %}
+
+          {% if error %}
+              {{ error }}
+          {% endif %}
+
+      {% endblock result %}
+
+      {% block history %}
+          <div class="kensaku">
+            {% load static%}
+            <p>
+              <img src="{% static "images/life_watch1.png"%}" style="max-height:30px"/>
+              検索履歴
+            </p>
+            <form action="" method="POST">
+            {% csrf_token %}
+                <input type="submit" name="asc" value="昇順" class="button" id="button1"></input>
+                <input type="submit" name="des" value="降順" class="button" id="button2"></input>
+                <input type="submit" name="clear" value="履歴をクリア" class="button" id="button3"></input>
+            </form>
 
 
-<hr size="2">
-[検索履歴]
-<form action="" method="POST">
-{% csrf_token %}
-    <input type="submit" name="asc" value="昇順"></input>
-    <input type="submit" name="des" value="降順"></input>
-    <input type="submit" name="clear" value="履歴をクリア"></input>
-</form>
+          {% if his %}
+
+            <table class="histable">
+              <tr>
+                <th>単語名</th>
+                <th>主な意味</th>
+              </tr>
+              {% for pref in his %}
+                <tr>
+                  <td>
+                    <a href="http://127.0.0.1:8000/?word={{pref.0}}">
+                      {{pref.0}}
+                      </a>
+                  </td>
+                  <td>{{pref.1}}</td>
+                </tr>
+              {% endfor %}
+            </table>
+
+          {% endif %}
+
+        </div>
+      {% endblock history %}
 
 
-      {% for pref in his %}
-        <a href="http://127.0.0.1:8000/qfromw/?word={{pref}}">
-        {{ pref }}
-        </a><br>
-      {% endfor %}
-
-
-{% endblock %}
-
-
-
-<hr size="2">
-<p>
-  欲しい単語が見つからないときは
-</p>
-<!-- Google  -->
-<form method=get action="http://www.google.co.jp/search">
-  {% csrf_token %}
-  <table bgcolor="#FFFFFF"><tr><td>
-  <a href="http://www.google.co.jp/">
-  <img src="http://www.google.com/logos/Logo_40wht.gif" border="0" alt="Google" align="absmiddle"></a>
-  <input type=text name=q size=31 maxlength=255 value="">
-  <input type=hidden name=ie value=utf-8>
-  <input type=hidden name=oe value=utf-8>
-  <input type=hidden name=hl value="ja">
-  <input type=submit name=btnG value="Google 検索">
-  </td></tr></table>
-</form>
-<!-- Google -->
+    {% block google %}
+      <p>
+        欲しい単語が見つからないときは
+      </p>
+      <!-- Google  -->
+      <form method=get action="http://www.google.co.jp/search" target="_blank">
+        {% csrf_token %}
+        <table bgcolor="#FFFFFF" class="google"><tr><td>
+          <a href="http://www.google.co.jp/" target="_blank">
+          <img src="https://www.google.co.jp/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" border="0" alt="Google" align="absmiddle" width="110" height="50"></a>
+          <input type=text name=q size=31 maxlength=255 value="">
+          <input type=hidden name=ie value=utf-8>
+          <input type=hidden name=oe value=utf-8>
+          <input type=hidden name=hl value="ja">
+          <input type=submit name=btnG value="Google 検索">
+        </td></tr></table>
+      </form>
+      <!-- Google -->
+    {% endblock google %}
+  </body>
+</html>

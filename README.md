@@ -1,10 +1,14 @@
+# What's new
+・検索履歴のあたりをめっちゃいじった
+
 # django-demo
-Django で簡単なアプリを作ってみました．
+Weblioのやつ
 
 ## 必要なパッケージ
 pip install requests
-
 pip install bs4
+pip install html5lib
 
 ## demo
-http://tyasunao.pythonanywhere.com/qfromw
+まだ
+(http://tyasunao.pythonanywhere.com/qfromw)

@@ -5,7 +5,8 @@ import requests   # Web からデータを取ってくる時に使う
 import bs4        # スクレイピング
 import re         # 正規表現によるマッチングを使う
 
-his = []
+his = []    #検索履歴に表示する単語
+his_imi = []#検索履歴に表示する単語の意味
 
 def input_word(request):
 
@@ -55,8 +56,11 @@ def input_word(request):
 
             #履歴の単語名を保存#
             his.append(word)
+            his_imi.append(imi)
+
             #順序を記憶したまま重複を削除#
             sender = sorted(set(his),key=his.index)
+            sender_imi = sorted(set(his_imi),key=his_imi.index)
 
             #重複した単語をリスト末尾に移動#
             for i in range(len(sender)):
@@ -64,11 +68,17 @@ def input_word(request):
                     dedupe = sender[:]
                     dedupe.append(dedupe[i])
                     dedupe.pop(i)
+                    dedupe_imi = sender_imi[:]
+                    dedupe_imi.append(dedupe_imi[i])
+                    dedupe_imi.pop(i)
                     #print('sender',dedupe)
                     sender = dedupe[:]
+                    sender_imi = dedupe_imi[:]
             tmp = sender[:]
+            tmp_imi = sender_imi[:]
             #最新検索ワードが上に表示されるようにソートしなおす#
             tmp.reverse()
+            tmp_imi.reverse()
 
             #ボタンが押されたら#
             if request.method == 'POST':
@@ -76,11 +86,15 @@ def input_word(request):
                     pass
                 if 'des' in request.POST:
                     tmp.reverse()
+                    tmp_imi.reverse()
                 if 'clear' in request.POST:
                     tmp.clear()
                     his.clear()
-
-            d['his'] = tmp
+                    tmp_imi.clear()
+                    his_imi.clear()
+            #単語名とその意味を同時にまとめたリストの作成
+            history = zip(tmp, tmp_imi)
+            d['his'] = history
 
         except:
             #何も入力が無い時、input==Noneなので、リストに追加されるのを防ぐための例外処理#
@@ -90,7 +104,8 @@ def input_word(request):
         e = {
             'error': "その単語は存在しません"
         }
+        print('[his_error]',his)
         return render(request, 'input.html',e)
-
+    print('[his]',his)
 
     return render(request, 'input.html',d)
