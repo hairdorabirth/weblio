@@ -1,5 +1,4 @@
 """mysite URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
 Examples:
@@ -18,5 +17,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'qfromw/', include('qfromw.urls')),
+    url(r'^$', include('qfromw.urls')),
 ]

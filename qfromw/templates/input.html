@@ -1,53 +1,91 @@
 {% block body %}
   <meta charset="utf-8">
+  今何時<br>
+  <script>
+  window.onload = function() {
+      window.setInterval(function() {
+        var dd = new Date();
+        document.getElementById("T1").innerHTML = dd.toLocaleString();
+      }, 1000);
+    }
+  </script>
+  <div id="T1"></div>
+
+<hr size="2">
+
   {% csrf_token %}
     <form action="" method="GET">
-        <label>名前:<input type="text" size="20" name="word"></label>
+        <label>検索したい単語を入力:<input type="text" size="20" name="word"></label>
         <input type="submit" value="入力">
     </form>
 
     {% if input %}
-    <script>
-    window.onload = function() {
-        window.setInterval(function() {
-          var dd = new Date();
-          document.getElementById("T1").innerHTML = dd.toLocaleString();
-        }, 1000);
-      }
-    </script>
-    <div id="T1"></div>
-        単語：{{ input }}
+        [単語]<br>
+        <a href="https://ejje.weblio.jp/content/{{ input }}" target="_blank">
+          {{ input }}</a>
         <br>
-        意味：{{ explanation }}
+        [{{ mainXX }}]<br>
+        {% for pref in explanation %}
+          {{ pref }}{% if not forloop.last %}<br>{% endif %}
+        {% endfor %}
         <br>
 
         {% if audio %}
         <p>
           {{ input }}の発音を再生する：
-          <audio src="{{audio}}" controls style="vertical-align: middle;" autoplay loop>
+          <audio src="{{audio}}" controls style="vertical-align: middle;" autoplay>
             {{ input }}を再生できないようです。
           </audio>
         </p>
         {% endif %}
 
         {% if nomp3 %}
-        {{nomp3}}<br>
+          <strong>{{nomp3}}<br></strong>
         {% endif %}
 
     {% endif %}
 
+    {% if error %}
+        {{ error }}
+    {% endif %}
+
+
 <hr size="2">
-[検索履歴]<br>
-    {% if his %}
+[検索履歴]
+<form action="" method="POST">
+{% csrf_token %}
+    <input type="submit" name="asc" value="昇順"></input>
+    <input type="submit" name="des" value="降順"></input>
+    <input type="submit" name="clear" value="履歴をクリア"></input>
+</form>
+
 
       {% for pref in his %}
         <a href="http://127.0.0.1:8000/qfromw/?word={{pref}}">
         {{ pref }}
         </a><br>
       {% endfor %}
-    {% endif %}
 
-    {% if error %}
-        {{ error }}
-    {% endif %}
+
 {% endblock %}
+
+
+
+<hr size="2">
+<p>
+  欲しい単語が見つからないときは
+</p>
+<!-- Google  -->
+<form method=get action="http://www.google.co.jp/search">
+  {% csrf_token %}
+  <table bgcolor="#FFFFFF"><tr><td>
+  <a href="http://www.google.co.jp/">
+  <img src="http://www.google.com/logos/Logo_40wht.gif" border="0" alt="Google" align="absmiddle"></a>
+  <input type=text name=q size=31 maxlength=255 value="">
+  <input type=hidden name=ie value=utf-8>
+  <input type=hidden name=oe value=utf-8>
+  <input type=hidden name=hl value="ja">
+  <input type=submit name=btnG value="Google 検索">
+  </td></tr></table>
+</form>
+<!-- Google -->

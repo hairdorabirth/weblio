@@ -4,8 +4,7 @@ from django.shortcuts import render
 import requests   # Web からデータを取ってくる時に使う
 import bs4        # スクレイピング
 import re         # 正規表現によるマッチングを使う
-from qfromw.forms import inputForm
-import copy
+
 
 his = []
 
@@ -30,9 +29,16 @@ def input_word(request):
         #その単語の音声データの部分を抽出#
         onsei = soup.select('i.fa.fa-volume-up.contentTopAudioIcon source')
 
+        #主な〇〇を抽出#
+        omona = soup.select('div.summaryM.descriptionWrp b.squareCircle.description')[0].getText()
         #その単語の意味を抽出・保存#
         imi = soup.select('div.summaryM.descriptionWrp td.content-explanation')[0].getText()
-        d['explanation'] = imi
+        #print(imi)
+        d['mainXX'] = omona
+
+        #正規表現で意味を分割、リストに保存#
+        imi_list = re.split('[;、]',imi)
+        d['explanation'] = imi_list
 
         #音声データが登録されていない単語も存在するので、別にtry-exceptを行う#
         try:
@@ -41,7 +47,6 @@ def input_word(request):
             d['audio'] = mp3[0]
         except:
             d['nomp3'] = 'この単語には音声データが存在しません'
-
 
         try:
             #フォームから入力された単語を変数に保存#
@@ -60,11 +65,22 @@ def input_word(request):
                     dedupe = sender[:]
                     dedupe.append(dedupe[i])
                     dedupe.pop(i)
-                    print('sender',dedupe)
+                    #print('sender',dedupe)
                     sender = dedupe[:]
             tmp = sender[:]
             #最新検索ワードが上に表示されるようにソートしなおす#
             tmp.reverse()
+
+            #ボタンが押されたら#
+            if request.method == 'POST':
+                if 'asc' in request.POST:
+                    pass
+                if 'des' in request.POST:
+                    tmp.reverse()
+                if 'clear' in request.POST:
+                    tmp.clear()
+                    his.clear()
+
             d['his'] = tmp
 
         except:
@@ -76,5 +92,6 @@ def input_word(request):
             'error': "その単語は存在しません"
         }
         return render(request, 'input.html',e)
+
 
     return render(request, 'input.html',d)
