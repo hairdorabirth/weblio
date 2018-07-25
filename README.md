@@ -5,9 +5,9 @@
 Weblioのやつ
 
 ## 必要なパッケージ
-pip install requests
-pip install bs4
-pip install html5lib
+pip install requests  
+pip install bs4  
+pip install html5lib  
 
 ## demo
 まだ
