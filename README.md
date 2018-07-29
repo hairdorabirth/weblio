@@ -1,5 +1,6 @@
-# What's new
-・検索履歴のあたりをめっちゃいじった
+# How to use
+Runserver後
+http://127.0.0.1:8000/
 
 # django-demo
 Weblioのやつ
