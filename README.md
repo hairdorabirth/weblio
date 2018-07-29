@@ -1,5 +1,5 @@
 # How to use
-Runserver後
+Runserver後  
 http://127.0.0.1:8000/
 
 # django-demo
@@ -11,5 +11,6 @@ pip install bs4
 pip install html5lib  
 
 ## demo
-まだ
-(http://tyasunao.pythonanywhere.com/qfromw)
+Pythonanywhereはうまく動作しなかったが直せず  
+一応URLを貼る  
+http://googlio2.pythonanywhere.com
